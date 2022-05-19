@@ -50,6 +50,10 @@ class DotEnvAdapterFactory
         return method_exists(is_null($dotEnv) ? 'Dotenv\\Dotenv' : get_class($dotEnv), 'createImmutable');
     }
 
+    /**
+     * @param \Dotenv\Dotenv|null $dotEnv
+     * @return bool
+     */
     public static function isV3($dotEnv = null): bool
     {
         // Here we deliberately specify the namespace as string,
