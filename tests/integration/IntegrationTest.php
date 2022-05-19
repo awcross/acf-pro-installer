@@ -358,6 +358,35 @@ class IntegrationTest extends TestCase
     /**
      * @dataProvider getTestMatrix
      */
+    public function testWithDotEnvV2EnvFileWorksCorrectly($phpVersion, $composerVersion)
+    {
+        $localComposerPath = __DIR__ . "/scenarios/composer.dotenv2.json";
+        $localDotEnvFilePath = __DIR__ . "/scenarios/dotenv.env";
+        $process = new Process(
+            [
+                "docker",
+                "run",
+                "--rm",
+                "-i",
+                "--network=acf-pro-installer-test",
+                "-v",
+                "{$localComposerPath}:/app/composer.json",
+                "-v",
+                "{$localDotEnvFilePath}:/app/.env",
+                "acf-pro-installer/testapp:{$phpVersion}-{$composerVersion}"
+            ],
+            __DIR__
+        );
+        $process->setTimeout(90);
+        $process->mustRun(function ($type, $buffer) {
+            echo $buffer;
+        });
+        $this->assertEquals(0, $process->getExitCode());
+    }
+
+    /**
+     * @dataProvider getTestMatrix
+     */
     public function testWithBedrockInstallWorksCorrectly($phpVersion, $composerVersion)
     {
         // Download latest bedrock composer file and modify it to contain the required repository
